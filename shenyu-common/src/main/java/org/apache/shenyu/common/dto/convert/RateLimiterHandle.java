@@ -27,6 +27,7 @@ public class RateLimiterHandle {
     
     /**
      * algorithm name.
+     * 算法名称
      */
     private String algorithmName;
 

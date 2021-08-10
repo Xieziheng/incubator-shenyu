@@ -44,6 +44,7 @@ public abstract class AbstractShenyuPlugin implements ShenyuPlugin {
 
     /**
      * this is Template Method child has Implement your own logic.
+     * 模版方法
      *
      * @param exchange exchange the current server exchange {@linkplain ServerWebExchange}
      * @param chain    chain the current chain  {@linkplain ServerWebExchange}
@@ -56,6 +57,11 @@ public abstract class AbstractShenyuPlugin implements ShenyuPlugin {
     /**
      * Process the Web request and (optionally) delegate to the next
      * {@code ShenyuPlugin} through the given {@link ShenyuPluginChain}.
+     * 默认的插件执行逻辑
+     * 1. 获取插件下所有选择器
+     * 2. 根据exchange和selector匹配，根据匹配策略工厂生成的匹配策略和决策匹配对应规则
+     * 3. 对应日志
+     * 4. 丢给响应链执行
      *
      * @param exchange the current server exchange
      * @param chain    provides a way to delegate to the next plugin
@@ -66,10 +72,12 @@ public abstract class AbstractShenyuPlugin implements ShenyuPlugin {
         String pluginName = named();
         PluginData pluginData = BaseDataCache.getInstance().obtainPluginData(pluginName);
         if (pluginData != null && pluginData.getEnabled()) {
+            //获取插件下所有选择器
             final Collection<SelectorData> selectors = BaseDataCache.getInstance().obtainSelectorData(pluginName);
             if (CollectionUtils.isEmpty(selectors)) {
                 return handleSelectorIfNull(pluginName, exchange, chain);
             }
+            //匹配选择器
             SelectorData selectorData = matchSelector(exchange, selectors);
             if (Objects.isNull(selectorData)) {
                 return handleSelectorIfNull(pluginName, exchange, chain);
@@ -109,24 +117,48 @@ public abstract class AbstractShenyuPlugin implements ShenyuPlugin {
                 .findFirst().orElse(null);
     }
 
+    /**
+     * 选择器过滤
+     * @param selector
+     * @param exchange
+     * @return
+     */
     private Boolean filterSelector(final SelectorData selector, final ServerWebExchange exchange) {
         if (selector.getType() == SelectorTypeEnum.CUSTOM_FLOW.getCode()) {
             if (CollectionUtils.isEmpty(selector.getConditionList())) {
                 return false;
             }
+            //匹配策略工厂
             return MatchStrategyFactory.match(selector.getMatchMode(), selector.getConditionList(), exchange);
         }
         return true;
     }
 
+    /**
+     * 规则匹配
+     * @param exchange
+     * @param rules
+     * @return
+     */
     private RuleData matchRule(final ServerWebExchange exchange, final Collection<RuleData> rules) {
         return rules.stream().filter(rule -> filterRule(rule, exchange)).findFirst().orElse(null);
     }
 
+    /**
+     * 规则过滤
+     * @param ruleData
+     * @param exchange
+     * @return
+     */
     private Boolean filterRule(final RuleData ruleData, final ServerWebExchange exchange) {
         return ruleData.getEnabled() && MatchStrategyFactory.match(ruleData.getMatchMode(), ruleData.getConditionDataList(), exchange);
     }
 
+    /**
+     * 日志留存
+     * @param selectorData
+     * @param pluginName
+     */
     private void selectorLog(final SelectorData selectorData, final String pluginName) {
         if (selectorData.getLogged()) {
             LOG.info("{} selector success match , selector name :{}", pluginName, selectorData.getName());

@@ -28,6 +28,7 @@ public abstract class AbstractMatchStrategy {
 
     /**
      * Build real data string.
+     * 这个ConditionData就是规则的具体条件
      *
      * @param condition the condition
      * @param exchange  the exchange

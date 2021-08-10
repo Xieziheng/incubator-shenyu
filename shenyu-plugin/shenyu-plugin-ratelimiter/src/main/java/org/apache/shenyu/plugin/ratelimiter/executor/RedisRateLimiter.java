@@ -42,7 +42,8 @@ public class RedisRateLimiter {
     private static final Logger LOG = LoggerFactory.getLogger(RedisRateLimiter.class);
     
     /**
-     * Verify using different current limiting algorithm scripts. 
+     * Verify using different current limiting algorithm scripts.
+     * 不同限流算法校验是否允许请求
      *
      * @param id is rule id
      * @param limiterHandle the limiter handle

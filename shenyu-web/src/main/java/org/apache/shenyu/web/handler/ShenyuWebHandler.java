@@ -42,6 +42,7 @@ public final class ShenyuWebHandler implements WebHandler {
     
     /**
      * Instantiates a new shenyu web handler.
+     * 实例化新web handler
      *
      * @param plugins the plugins
      */
@@ -76,6 +77,9 @@ public final class ShenyuWebHandler implements WebHandler {
         return execute;
     }
 
+    /**
+     * 多个插件组成的执行链，响应式编程
+     */
     private static class DefaultShenyuPluginChain implements ShenyuPluginChain {
 
         private int index;
@@ -93,6 +97,9 @@ public final class ShenyuWebHandler implements WebHandler {
 
         /**
          * Delegate to the next {@code WebFilter} in the chain.
+         * 这是模版方法 + 执行链模式 详见@ShenyuPlugin接口
+         * index是当前插件在整个执行链中的序列
+         * skip方法重写来判断是否可以跳过当前插件处理
          *
          * @param exchange the current server exchange
          * @return {@code Mono<Void>} to indicate when request handling is complete

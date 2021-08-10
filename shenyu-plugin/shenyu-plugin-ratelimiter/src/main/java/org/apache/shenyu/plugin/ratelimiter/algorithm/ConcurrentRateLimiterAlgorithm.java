@@ -36,6 +36,10 @@ import java.util.List;
 @Join
 public class ConcurrentRateLimiterAlgorithm extends AbstractRateLimiterAlgorithm {
 
+    /**
+     * 不同的实现获取不同的脚本名，枚举装好
+     * @return
+     */
     @Override
     protected String getScriptName() {
         return RateLimitEnum.CONCURRENT.getScriptName();

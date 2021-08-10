@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * The interface Rate limiter algorithm.
+ * 限流算法顶级接口
  *
  * @param <T> the type parameter
  */
@@ -32,6 +33,7 @@ public interface RateLimiterAlgorithm<T> {
     
     /**
      * Gets script.
+     * 获取算法脚本
      *
      * @return the script
      */

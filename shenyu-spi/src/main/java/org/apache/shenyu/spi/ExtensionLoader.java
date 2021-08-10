@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * The type Extension loader.
  * This is done by loading the properties file.
+ * 基本上跟DUBBO的SPI机制一样
  *
  * @see <a href="https://github.com/apache/dubbo/blob/master/dubbo-common/src/main/java/org/apache/dubbo/common/extension/ExtensionLoader.java">ExtensionLoader</a>
  */
@@ -106,6 +107,7 @@ public final class ExtensionLoader<T> {
 
     /**
      * Gets join.
+     * Dubbo的SPI中叫做getExtension，这里改成了getJoin，根据配置获取对应实现
      *
      * @param name the name
      * @return the join.
@@ -114,6 +116,7 @@ public final class ExtensionLoader<T> {
         if (StringUtils.isBlank(name)) {
             throw new NullPointerException("get join name is null");
         }
+        //缓存中为命中就要初始化了
         Holder<Object> objectHolder = cachedInstances.get(name);
         if (objectHolder == null) {
             cachedInstances.putIfAbsent(name, new Holder<>());
@@ -121,9 +124,11 @@ public final class ExtensionLoader<T> {
         }
         Object value = objectHolder.getValue();
         if (value == null) {
+            //有新增时还需要锁缓存map
             synchronized (cachedInstances) {
                 value = objectHolder.getValue();
                 if (value == null) {
+                    //初始化实例
                     value = createExtension(name);
                     objectHolder.setValue(value);
                 }
@@ -158,11 +163,13 @@ public final class ExtensionLoader<T> {
      * @return the extension classes
      */
     public Map<String, Class<?>> getExtensionClasses() {
+        //Class也有个缓存
         Map<String, Class<?>> classes = cachedClasses.getValue();
         if (classes == null) {
             synchronized (cachedClasses) {
                 classes = cachedClasses.getValue();
                 if (classes == null) {
+                    //没命中就加载初始化
                     classes = loadExtensionClass();
                     cachedClasses.setValue(classes);
                 }
@@ -172,6 +179,7 @@ public final class ExtensionLoader<T> {
     }
 
     private Map<String, Class<?>> loadExtensionClass() {
+        //终于找到了，所有打了SPI注解的类
         SPI annotation = clazz.getAnnotation(SPI.class);
         if (annotation != null) {
             String value = annotation.value();
@@ -186,16 +194,19 @@ public final class ExtensionLoader<T> {
 
     /**
      * Load files under SHENYU_DIRECTORY.
+     * 读取配置文件了属于是
      */
     private void loadDirectory(final Map<String, Class<?>> classes) {
         String fileName = SHENYU_DIRECTORY + clazz.getName();
         try {
             ClassLoader classLoader = ExtensionLoader.class.getClassLoader();
+            //根据类全限定名找到Class文件
             Enumeration<URL> urls = classLoader != null ? classLoader.getResources(fileName)
                     : ClassLoader.getSystemResources(fileName);
             if (urls != null) {
                 while (urls.hasMoreElements()) {
                     URL url = urls.nextElement();
+                    //
                     loadResources(classes, url);
                 }
             }
@@ -234,6 +245,7 @@ public final class ExtensionLoader<T> {
         if (annotation == null) {
             throw new IllegalStateException("load extension resources error," + subClass + " with Join annotation");
         }
+        //根据配置，注解的类生成反射重要组建 Class并且缓存起来，供之后SPI初始化实例的时候反射用
         Class<?> oldClass = classes.get(name);
         if (oldClass == null) {
             classes.put(name, subClass);

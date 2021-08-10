@@ -26,6 +26,8 @@ import java.util.Objects;
 
 /**
  * Predicate judge factory.
+ *
+ *
  */
 public class PredicateJudgeFactory {
     
@@ -50,6 +52,7 @@ public class PredicateJudgeFactory {
         if (Objects.isNull(conditionData) || StringUtils.isBlank(realData)) {
             return false;
         }
+        //不同的匹配机制有不同的实现，也是基于SPI，最终匹配到
         return newInstance(conditionData.getOperator()).judge(conditionData, realData);
     }
 

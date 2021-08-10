@@ -26,11 +26,13 @@ import java.util.List;
 
 /**
  * MatchStrategyFactory.
+ * 匹配策略工厂
  */
 public class MatchStrategyFactory {
     
     /**
      * New instance match strategy.
+     * SPI来获得不同策略的实现类
      *
      * @param strategy the strategy
      * @return the match strategy
@@ -43,12 +45,13 @@ public class MatchStrategyFactory {
     /**
      * Match boolean.
      *
-     * @param strategy the strategy
+     * @param strategy the strategy, 规则是and 还是 or
      * @param conditionDataList the condition data list
      * @param exchange the exchange
      * @return the boolean
      */
     public static boolean match(final Integer strategy, final List<ConditionData> conditionDataList, final ServerWebExchange exchange) {
+        //实例初始化
         return newInstance(strategy).match(conditionDataList, exchange);
     }
 }

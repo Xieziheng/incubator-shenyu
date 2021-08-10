@@ -30,7 +30,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * The type Abstract rate limiter algorithm.
  */
 public abstract class AbstractRateLimiterAlgorithm implements RateLimiterAlgorithm<List<Long>> {
-    
+
+    /**
+     * 是否初始化过
+     */
     private final AtomicBoolean initialized = new AtomicBoolean(false);
     
     private RedisScript<List<Long>> script;
@@ -48,16 +51,23 @@ public abstract class AbstractRateLimiterAlgorithm implements RateLimiterAlgorit
      * @return the key name
      */
     protected abstract String getKeyName();
-    
+
+    /**
+     * 默认脚本实现，从固定路径中读取lua脚本
+     * @return
+     */
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public RedisScript<List<Long>> getScript() {
+        //未初始化则加载lua脚本到内存
         if (!this.initialized.get()) {
             DefaultRedisScript redisScript = new DefaultRedisScript<>();
+            //算法脚本路径
             String scriptPath = "/META-INF/scripts/" + getScriptName();
             redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource(scriptPath)));
             redisScript.setResultType(List.class);
             this.script = redisScript;
+            //cas设置为已初始化
             initialized.compareAndSet(false, true);
             return redisScript;
         }

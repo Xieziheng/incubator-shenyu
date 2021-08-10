@@ -45,7 +45,13 @@ public class GlobalPlugin implements ShenyuPlugin {
     public GlobalPlugin(final ShenyuContextBuilder builder) {
         this.builder = builder;
     }
-    
+
+    /**
+     * 全局插件，第一个处理执行链，大概是构建请求上下文
+     * @param exchange the current server exchange
+     * @param chain    provides a way to delegate to the next filter
+     * @return
+     */
     @Override
     public Mono<Void> execute(final ServerWebExchange exchange, final ShenyuPluginChain chain) {
         final ServerHttpRequest request = exchange.getRequest();

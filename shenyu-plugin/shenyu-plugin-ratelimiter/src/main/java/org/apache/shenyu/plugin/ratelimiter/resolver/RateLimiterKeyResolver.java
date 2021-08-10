@@ -22,6 +22,7 @@ import org.springframework.web.server.ServerWebExchange;
 
 /**
  * RateLimiterKeyResolver.
+ * 限流算法中请求id的解析器
  */
 @SPI
 public interface RateLimiterKeyResolver {

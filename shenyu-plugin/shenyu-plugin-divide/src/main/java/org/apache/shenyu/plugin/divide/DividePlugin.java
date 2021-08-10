@@ -100,6 +100,11 @@ public class DividePlugin extends AbstractShenyuPlugin {
         return PluginEnum.DIVIDE.getName();
     }
 
+    /**
+     * Http请求的插件跳过逻辑，根据请求上下文中的rpcType来判断是否处理
+     * @param exchange the current server exchange
+     * @return
+     */
     @Override
     public Boolean skip(final ServerWebExchange exchange) {
         final ShenyuContext shenyuContext = exchange.getAttribute(Constants.CONTEXT);

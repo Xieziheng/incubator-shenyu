@@ -65,6 +65,8 @@ public class ShenyuConfiguration {
 
     /**
      * Init ShenyuWebHandler.
+     * 这个plugins是哪里来的！肯定是根据配置来的
+     * ObjectProvider是 一种更宽松的构造器注入，允许为空
      *
      * @param plugins this plugins is All impl ShenyuPlugin.
      * @return {@linkplain ShenyuWebHandler}
@@ -72,9 +74,11 @@ public class ShenyuConfiguration {
     @Bean("webHandler")
     public ShenyuWebHandler shenyuWebHandler(final ObjectProvider<List<ShenyuPlugin>> plugins) {
         List<ShenyuPlugin> pluginList = plugins.getIfAvailable(Collections::emptyList);
+        //预处理 插件list
         List<ShenyuPlugin> shenyuPlugins = pluginList.stream()
                 .sorted(Comparator.comparingInt(ShenyuPlugin::getOrder)).collect(Collectors.toList());
         shenyuPlugins.forEach(shenyuPlugin -> LOG.info("load plugin:[{}] [{}]", shenyuPlugin.named(), shenyuPlugin.getClass().getName()));
+        //塞给shenyuWebHandler,执行链处理
         return new ShenyuWebHandler(shenyuPlugins);
     }
 
