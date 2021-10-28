@@ -80,6 +80,7 @@ public class WebsocketSyncDataService implements SyncDataService, AutoCloseable 
                 } else {
                     LOG.error("websocket connection is error.....");
                 }
+                //类似于心跳检查？
                 executor.scheduleAtFixedRate(() -> {
                     try {
                         if (client.isClosed()) {

@@ -45,8 +45,10 @@ public class WebsocketDataChangedListener implements DataChangedListener {
 
     @Override
     public void onSelectorChanged(final List<SelectorData> selectorDataList, final DataEventTypeEnum eventType) {
+        //封装数据
         WebsocketData<SelectorData> websocketData =
                 new WebsocketData<>(ConfigGroupEnum.SELECTOR.name(), eventType.name(), selectorDataList);
+        //发送出去
         WebsocketCollector.send(GsonUtils.getInstance().toJson(websocketData), eventType);
     }
 

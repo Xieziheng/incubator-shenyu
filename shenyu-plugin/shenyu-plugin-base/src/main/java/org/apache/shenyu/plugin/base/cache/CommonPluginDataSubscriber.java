@@ -119,6 +119,7 @@ public class CommonPluginDataSubscriber implements PluginDataSubscriber {
             if (data instanceof PluginData) {
                 PluginData pluginData = (PluginData) data;
                 if (dataType == DataEventTypeEnum.UPDATE) {
+                    //缓存
                     BaseDataCache.getInstance().cachePluginData(pluginData);
                     Optional.ofNullable(handlerMap.get(pluginData.getName())).ifPresent(handler -> handler.handlerPlugin(pluginData));
                 } else if (dataType == DataEventTypeEnum.DELETE) {

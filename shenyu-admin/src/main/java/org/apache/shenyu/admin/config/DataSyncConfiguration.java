@@ -49,6 +49,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 /**
  * The type Data sync configuration.
+ * 数据同步的配置类
  */
 @Configuration
 public class DataSyncConfiguration {
@@ -112,6 +113,7 @@ public class DataSyncConfiguration {
 
         /**
          * Data changed listener data changed listener.
+         * nacos实现的数据同步监听器加载
          *
          * @param configService the config service
          * @return the data changed listener
@@ -140,12 +142,14 @@ public class DataSyncConfiguration {
      * The WebsocketListener(default strategy).
      */
     @Configuration
+    //属性条件，按条件加载
     @ConditionalOnProperty(name = "shenyu.sync.websocket.enabled", havingValue = "true", matchIfMissing = true)
     @EnableConfigurationProperties(WebsocketSyncProperties.class)
     static class WebsocketListener {
 
         /**
          * Config event listener data changed listener.
+         * ws实现的数据同步事件监听器
          *
          * @return the data changed listener
          */

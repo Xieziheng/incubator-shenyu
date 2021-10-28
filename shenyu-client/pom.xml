@@ -34,7 +34,7 @@
         <module>shenyu-client-tars</module>
         <module>shenyu-client-grpc</module>
         <module>shenyu-client-motan</module>
-    </modules>
+    </modules
 
     <dependencies>
         <dependency>

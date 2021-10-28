@@ -31,9 +31,11 @@ import java.util.stream.Collectors;
 
 /**
  * The type Base data cache.
+ * 持有数据的缓存
  */
 public final class BaseDataCache {
 
+    //单例模式的
     private static final BaseDataCache INSTANCE = new BaseDataCache();
 
     /**

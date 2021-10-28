@@ -29,6 +29,7 @@ public class RuleHandleCache<K, V> implements HandleCache<K, V> {
 
     /**
      * selectorId.ruleName -> handle.
+     * 缓存实现
      */
     private final ConcurrentHashMap<K, V> cached = new ConcurrentHashMap<>();
 

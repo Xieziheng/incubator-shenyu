@@ -36,6 +36,8 @@ import java.util.List;
 
 /**
  * Websocket sync data configuration for spring boot.
+ * 通过springboot实现条件注入
+ *
  */
 @Configuration
 @ConditionalOnClass(WebsocketSyncDataService.class)
@@ -45,6 +47,8 @@ public class WebsocketSyncDataConfiguration {
 
     /**
      * Websocket sync data service.
+     *
+     * ws服务初始化依赖spring boot 的条件装配
      *
      * @param websocketConfig   the websocket config
      * @param pluginSubscriber the plugin subscriber

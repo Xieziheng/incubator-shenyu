@@ -26,6 +26,8 @@ import org.apache.shenyu.sync.data.api.PluginDataSubscriber;
 
 /**
  * The type Websocket cache handler.
+ * 数据变更，ws同步处理器
+ * 通过工厂模式创建的
  */
 public class WebsocketDataHandler {
 
@@ -41,6 +43,7 @@ public class WebsocketDataHandler {
     public WebsocketDataHandler(final PluginDataSubscriber pluginDataSubscriber,
                                 final List<MetaDataSubscriber> metaDataSubscribers,
                                 final List<AuthDataSubscriber> authDataSubscribers) {
+        //不同的事件不同的处理器，初始化进去
         ENUM_MAP.put(ConfigGroupEnum.PLUGIN, new PluginDataHandler(pluginDataSubscriber));
         ENUM_MAP.put(ConfigGroupEnum.SELECTOR, new SelectorDataHandler(pluginDataSubscriber));
         ENUM_MAP.put(ConfigGroupEnum.RULE, new RuleDataHandler(pluginDataSubscriber));
@@ -56,6 +59,7 @@ public class WebsocketDataHandler {
      * @param eventType the event type
      */
     public void executor(final ConfigGroupEnum type, final String json, final String eventType) {
+        //对应的处理并获取
         ENUM_MAP.get(type).handle(json, eventType);
     }
 }

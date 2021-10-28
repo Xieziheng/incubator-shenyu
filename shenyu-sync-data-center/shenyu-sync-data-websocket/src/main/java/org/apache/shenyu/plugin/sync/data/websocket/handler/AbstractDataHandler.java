@@ -57,6 +57,11 @@ public abstract class AbstractDataHandler<T> implements DataHandler {
      */
     protected abstract void doDelete(List<T> dataList);
 
+    /**
+     * 抽象逻辑由抽象类实现，不同逻辑不同实现类实现，这是模版方法
+     * @param json  the data for json
+     * @param eventType the event type
+     */
     @Override
     public void handle(final String json, final String eventType) {
         List<T> dataList = convert(json);

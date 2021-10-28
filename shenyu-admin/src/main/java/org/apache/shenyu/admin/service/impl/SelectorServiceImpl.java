@@ -144,6 +144,7 @@ public class SelectorServiceImpl implements SelectorService {
                 selectorConditionMapper.insertSelective(selectorConditionDO);
             });
         }
+        //事件发布
         publishEvent(selectorDO, selectorConditionDTOs);
         updateDivideUpstream(selectorDO);
         return selectorCount;

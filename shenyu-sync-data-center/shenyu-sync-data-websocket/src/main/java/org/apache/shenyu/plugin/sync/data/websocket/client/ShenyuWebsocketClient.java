@@ -35,6 +35,7 @@ import java.util.List;
 
 /**
  * The type shenyu websocket client.
+ * 各应用端的ws客户端，接受admin发来的数据
  */
 public final class ShenyuWebsocketClient extends WebSocketClient {
 
@@ -87,7 +88,9 @@ public final class ShenyuWebsocketClient extends WebSocketClient {
     @SuppressWarnings("ALL")
     private void handleResult(final String result) {
         LOG.info("handleResult({})", result);
+        //序列化回来
         WebsocketData websocketData = GsonUtils.getInstance().fromJson(result, WebsocketData.class);
+        //反解析数据
         ConfigGroupEnum groupEnum = ConfigGroupEnum.acquireByName(websocketData.getGroupType());
         String eventType = websocketData.getEventType();
         String json = GsonUtils.getInstance().toJson(websocketData.getData());

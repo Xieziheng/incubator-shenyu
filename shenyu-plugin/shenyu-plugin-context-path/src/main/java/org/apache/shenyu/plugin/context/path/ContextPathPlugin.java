@@ -47,6 +47,7 @@ public class ContextPathPlugin extends AbstractShenyuPlugin {
     protected Mono<Void> doExecute(final ServerWebExchange exchange, final ShenyuPluginChain chain, final SelectorData selector, final RuleData rule) {
         ShenyuContext shenyuContext = exchange.getAttribute(Constants.CONTEXT);
         assert shenyuContext != null;
+        //缓存中获取handle
         ContextMappingHandle contextMappingHandle = ContextPathPluginDataHandler.CACHED_HANDLE.get().obtainHandle(CacheKeyUtils.INST.getKey(rule));
         if (Objects.isNull(contextMappingHandle)) {
             LOG.error("context path rule configuration is null ：{}", rule);
@@ -68,6 +69,7 @@ public class ContextPathPlugin extends AbstractShenyuPlugin {
 
     @Override
     public Boolean skip(final ServerWebExchange exchange) {
+        //http请求路由插件直接跳过rpc
         ShenyuContext body = exchange.getAttribute(Constants.CONTEXT);
         assert body != null;
         String rpcType = body.getRpcType();
@@ -80,6 +82,7 @@ public class ContextPathPlugin extends AbstractShenyuPlugin {
 
     /**
      * Build the context path and realUrl.
+     * 设置上下文了
      *
      * @param context context
      * @param handle  handle

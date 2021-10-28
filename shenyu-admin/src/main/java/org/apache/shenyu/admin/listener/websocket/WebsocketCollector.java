@@ -123,6 +123,7 @@ public class WebsocketCollector {
      */
     public static void send(final String message, final DataEventTypeEnum type) {
         if (StringUtils.isNotBlank(message)) {
+            //第一次全量同步
             if (DataEventTypeEnum.MYSELF == type) {
                 Session session = (Session) ThreadLocalUtil.get(SESSION_KEY);
                 if (session != null) {

@@ -42,18 +42,25 @@ public class DataChangedEventDispatcher implements ApplicationListener<DataChang
 
     private List<DataChangedListener> listeners;
 
+
     public DataChangedEventDispatcher(final ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
+    /**
+     * 事件监听，收到spring数据变更事件后开始分发
+     * @param event
+     */
     @Override
     @SuppressWarnings("unchecked")
     public void onApplicationEvent(final DataChangedEvent event) {
         for (DataChangedListener listener : listeners) {
             switch (event.getGroupKey()) {
+                //认证
                 case APP_AUTH:
                     listener.onAppAuthChanged((List<AppAuthData>) event.getSource(), event.getEventType());
                     break;
+                    //插件
                 case PLUGIN:
                     listener.onPluginChanged((List<PluginData>) event.getSource(), event.getEventType());
                     break;

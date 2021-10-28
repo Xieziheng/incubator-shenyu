@@ -73,6 +73,7 @@ public class DashboardUserController {
         String iv = secretProperties.getIv();
         CommonPager<DashboardUserVO> commonPager = dashboardUserService.listByPage(new DashboardUserQuery(userName, new PageParameter(currentPage, pageSize)));
         if (CollectionUtils.isNotEmpty(commonPager.getDataList())) {
+            //AES算法给密码加密
             commonPager.getDataList()
                     .forEach(item -> item.setPassword(AesUtils.aesDecryption(item.getPassword(), key, iv)));
             return ShenyuAdminResult.success(ShenyuResultMessage.QUERY_SUCCESS, commonPager);
@@ -92,6 +93,7 @@ public class DashboardUserController {
         String key = secretProperties.getKey();
         String iv = secretProperties.getIv();
         DashboardUserEditVO dashboardUserEditVO = dashboardUserService.findById(id);
+        //AES解密后，密码明文返回给前端
         return Optional.ofNullable(dashboardUserEditVO).map(item -> {
             item.setPassword(AesUtils.aesDecryption(item.getPassword(), key, iv));
             return ShenyuAdminResult.success(ShenyuResultMessage.DETAIL_SUCCESS, item);
